@@ -1,8 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator, EmailValidator
-import pytz
-from pytz import timezone as pytz_timezone, UnknownTimeZoneError
+
 
 
 class InstructorModel(models.Model):
@@ -72,6 +71,4 @@ class BookingModel(models.Model):
     def __str__(self):
         return f"Booking for {self.client_name} in {self.fitness}"
 
-    class Meta:
-        unique_together = ['fitness', 'client_email']
    

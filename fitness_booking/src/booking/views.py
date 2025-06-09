@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.utils.timezone import now
 from rest_framework.exceptions import ValidationError
 from .models import FitnessModel, BookingModel ,InstructorModel
 from .serializer import FitnessClassSerializer, BookingSerializer ,FitnessCreateSerializer ,InstructorSerializer
+import pytz
 import logging
 
 logger = logging.getLogger(__name__)
@@ -13,15 +15,23 @@ class ClassListView(APIView):
     def get(self, request):
         try:
             user_tz = request.GET.get('user_timezone', 'Asia/Kolkata')
-            logger.info(f"User timezone: {user_tz}")
-            classes = FitnessModel.objects.all()
+            user_timezone = pytz.timezone(user_tz)
+
+            current_time = now().astimezone(user_timezone)
+            logger.info(f"User timezone: {user_tz}, Current time: {current_time}")
+
+            classes = FitnessModel.objects.filter(datetime_ist__gte=current_time)
+            
             serializer = FitnessClassSerializer(classes, many=True,context={'user_timezone': user_tz})
+            
             return Response(serializer.data,status=status.HTTP_200_OK)
+        
         except Exception as e:
             logger.exception("Error fetching class list")
             return Response({"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def post(self, request):
+        
         serializer = FitnessCreateSerializer(data=request.data)
         try:
             if serializer.is_valid(raise_exception=True):
@@ -38,6 +48,7 @@ class ClassListView(APIView):
 
 class BookingCreateView(APIView):
     def post(self, request):
+        
         serializer = BookingSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -54,6 +65,7 @@ class BookingCreateView(APIView):
 
 class BookingListView(APIView):
     def get(self, request):
+        
         email = request.query_params.get('client_email')
         if not email:
             logger.warning("Missing client_email in booking list request")
@@ -75,6 +87,7 @@ class BookingListView(APIView):
 class InstructorView(APIView):
     
     def get(self,request):
+        
         try:
             Instructor=InstructorModel.objects.all()
             serializer=InstructorSerializer(Instructor,many=True)
@@ -103,6 +116,7 @@ class InstructorView(APIView):
     
 class BookingCancelView(APIView):
     def post(self, request):
+        
         booking_id = request.data.get('booking_id')
         email = request.data.get('client_email')
 
