@@ -221,18 +221,3 @@ Security Notes
 The ALLOWED_HOSTS setting in settings.py is set to ['*'] for development. In production, update this to specific domains (ALLOWED_HOSTS = ['yourdomain.com']) to prevent security risks.
 The SECRET_KEY in settings.py is hardcoded for development. In production, store it in an environment variable.
 
-Troubleshooting
-
-Timezone issues: Ensure the user_timezone query parameter is a valid timezone name (e.g., America/New_York). Invalid timezones will default to Asia/Kolkata.
-Booking errors: If you encounter overbooking issues, ensure there are available slots before booking. The API prevents overbooking but does not handle concurrent requests atomically (a potential improvement).
-Cancellation errors: Ensure the client_email matches the booking’s email to authorize cancellation.
-Logs: Check the console logs for debugging information (e.g., API errors, seeding logs).
-
-Future Improvements
-
-Implement atomic transactions to prevent race conditions during booking.
-Add more unit tests for timezone conversion and edge cases.
-Add API documentation using Swagger/OpenAPI (e.g., with drf-yasg).
-
-Author
-This project was developed as part of a Python Developer Assignment for a role requiring 1+ years of experience.
