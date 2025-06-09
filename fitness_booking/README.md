@@ -33,20 +33,25 @@ Follow these steps to set up and run the project locally.
 Clone the project repository to your local machine:
 
 git clone https://github.com/Praveenr-2101/Fitness-Assignment.git
+
 cd fitness_booking
+
 set PYTHONPATH=.
 
 3. Install Dependencies
 This project uses Poetry to manage dependencies. Install the required packages:
+
 poetry install
 
 
-4. Apply Database Migrations
+5. Apply Database Migrations
 Set up the SQLite database by running migrations:
+
 poetry run python src/manage.py migrate
 
-5. Seed the Database (Optional)
+7. Seed the Database (Optional)
 The project includes a script to populate the database with sample data (instructors, classes, and bookings). To seed the database:
+
 poetry run python temp/seed.py
 
 This will:
@@ -56,6 +61,7 @@ Log the seeding process for debugging.
 
 5. Run the Development Server
 Start the Django development server:
+
 poetry run python src/manage.py runserver
 
 The API will be available at http://localhost:8000.
