@@ -17,6 +17,11 @@ class FitnessClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = FitnessModel
         fields = ['id', 'name', 'description', 'instructor', 'start_time', 'start_date', 'duration_minutes', 'total_slots', 'available_slots','days_of_week']
+    
+    def validate_instructor(self, value):
+        if not InstructorModel.objects.filter(pk=value.id).exists():
+            raise serializers.ValidationError("Instructor with this ID does not exist.")
+        return value
         
     def get_start_date(self, obj):
         user_tz = self.context.get('user_timezone', 'Asia/Kolkata')
@@ -41,6 +46,11 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingModel
         fields = ['id', 'fitness', 'fitness_id', 'client_name', 'client_email', 'booked_at', 'status']
+        
+    def validate_fitness(self, fitness):
+        if not FitnessModel.objects.filter(pk=fitness.id).exists():
+            raise serializers.ValidationError("Fitness class with this ID does not exist.")
+        return fitness
 
     def create(self, validated_data):
         fitness = validated_data['fitness']
