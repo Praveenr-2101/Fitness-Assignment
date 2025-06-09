@@ -14,11 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 def seed_data():
-    
-    BookingModel.objects.all().delete()
-    FitnessModel.objects.all().delete()
-    InstructorModel.objects.all().delete()
-    logger.info("Cleared all existing data.")
 
     instructors = [
         {"name": "Jane Doe", "email": "jane@example.com", "bio": "Certified Yoga and Pilates instructor"},
